@@ -9,6 +9,8 @@ SPACE = re.compile(r"\s+")
 
 def segment_words(text:str) -> list[str]:
     """
+    Helper to split sentences on whitespace, punctuation, or script boundary
+    
     For whitespace delimited languages: Converts a sentence/continuous text into words
     i.e. "This sentence is short" => ["this", "sentence", "is", "short"]
     
