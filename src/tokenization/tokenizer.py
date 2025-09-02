@@ -11,6 +11,7 @@ SPACE = re.compile(r" +")
 
 EOW = "</w>"
 UNK = "<unk>"
+
 # Helper Functions for Sennrich et al.
 
 
@@ -25,11 +26,6 @@ def segment_words(text: str) -> list[str]:
     i.e "今天好熱！但是因為裡面有空調，所以還好" => ["今天好熱", "！", "但是因為裡面有空調", "，", "所以還好"]
     """
     return SEGMENT.findall(text)
-
-
-print(segment_words("今天好熱！但是因為裡面有空調，所以還好"))
-
-print(segment_words("This sentence is short."))
 
 
 def _word_to_symbols(word: str) -> list[str]:
@@ -58,10 +54,6 @@ def _get_bigram(vocab_counts: Mapping[str, int]) -> dict[tuple[str, str], int]:
     return pairs
 
 
-print(_get_bigram(vocab_counts={"l o w <EOW>": 2,
-      "l o w e r <EOW>": 1, "m i d <EOW>": 1}))
-
-
 def _merge_token(pair: tuple[str, str],
                  vocab_counts: Mapping[str, int]) -> dict[str, int]:
     """
@@ -78,10 +70,6 @@ def _merge_token(pair: tuple[str, str],
         merged = p.sub("".join(pair), word_str)
         new_vocab[merged] = new_vocab.get(merged, 0) + freq
     return new_vocab
-
-
-print(_merge_token(pair=("l", "o"), vocab_counts={
-      "l o w <EOW>": 2, "l o w e r <EOW>": 1, "m i d <EOW>": 1}))
 
 
 @dataclass
@@ -101,7 +89,7 @@ class BPETokenizer:
         """
         # 1) Build vocab_counts from corpus
         vocab_counts: Counter[str] = Counter()
-        
+
         # Add all symbols in original vocab to generalize tokenization
         base_symbols: set[str] = set(self.specials)
         for text in texts:
@@ -116,7 +104,7 @@ class BPETokenizer:
 
         # 2) Merge high frequency co-occuring characters
         merges: list[tuple[str, str]] = []
-        merged_tokens :set[str] = set()
+        merged_tokens: set[str] = set()
         for _ in range(num_merges):
             bigram = _get_bigram(vocab_counts)
             if not bigram:
@@ -129,9 +117,8 @@ class BPETokenizer:
             vocab_counts = _merge_token(best, vocab_counts)
             merges.append(best)
 
-            L,R = best
+            L, R = best
             merged_tokens.add(L+R)
-            print(merges)
 
         # Save merges and merge order for tokenization
         self.merges = merges
@@ -223,7 +210,7 @@ class BPETokenizer:
             ids.append(token_id)
 
         return ids
-    
+
     def decode(self, ids: list[int]) -> str:
         """
         Convert list of token ids into string; EOW turn into spaces
@@ -232,10 +219,3 @@ class BPETokenizer:
         text = "".join(token_strs)
         text = text.replace(EOW, " ")
         return SPACE.sub(" ", text).strip()
-tokenizer = BPETokenizer()
-tokenizer.train(
-    texts=["low lower", "lowest 我的天", "我的好吃的蘋果"], num_merges=5
-)
-print(tokenizer._encode_word(word="lottery"))
-print(tokenizer.encode("low 我的 est"))
-print(tokenizer.decode(tokenizer.encode("lottery")))
