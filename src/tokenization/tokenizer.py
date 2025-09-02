@@ -7,7 +7,7 @@ from collections import Counter
 CJK_RANGE = r"\u4E00-\u9FFF"
 SEGMENT = re.compile(
     fr"[{CJK_RANGE}]+|[^\s{CJK_RANGE}{string.punctuation}]+|[{string.punctuation}]+")
-SPACE = re.compile(r"\s+")
+SPACE = re.compile(r" +")
 
 EOW = "</w>"
 UNK = "<unk>"
@@ -144,7 +144,7 @@ class BPETokenizer:
 
         # Add all intermediate merge tokens and base tokens
         token_set.update(base_symbols, merged_tokens)
-        
+
         # 4) Add token to id mapping
         token_list = sorted(token_set, key=lambda t: (len(t), t))
         self.token_to_id = {token: idx for idx, token in enumerate(token_list)}
@@ -223,12 +223,19 @@ class BPETokenizer:
             ids.append(token_id)
 
         return ids
-
-
+    
+    def decode(self, ids: list[int]) -> str:
+        """
+        Convert list of token ids into string; EOW turn into spaces
+        """
+        token_strs = [self.id_to_token[id] for id in ids]
+        text = "".join(token_strs)
+        text = text.replace(EOW, " ")
+        return SPACE.sub(" ", text).strip()
 tokenizer = BPETokenizer()
 tokenizer.train(
     texts=["low lower", "lowest 我的天", "我的好吃的蘋果"], num_merges=5
 )
 print(tokenizer._encode_word(word="lottery"))
 print(tokenizer.encode("low 我的 est"))
-breakpoint()
+print(tokenizer.decode(tokenizer.encode("lottery")))
