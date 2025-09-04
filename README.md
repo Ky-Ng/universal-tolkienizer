@@ -19,6 +19,9 @@ ___
   - [Train Tokenizer](#train-tokenizer)
   - [Train Tokenizer on Aya Collections](#train-tokenizer-on-aya-collections)
 
+### Acknowledgements
+Huge thanks to [Professor Khalil Iskarous](https://dornsife.usc.edu/profile/khalil-iskarous/) for your being my source of inspiration and passion for Computational Linguistics. Thank you [Professor Zuzanna Fuchs](https://www.zuzannazfuchs.com) and [Professor Jason Zevin](https://dornsife.usc.edu/profile/jason-zevin/) for help in understanding the multilingual lexicon.
+
 ### Introduction
 - Increase `language plasticity`, a model's ability to learn languages post-training for downstream application ("make LLMs life-long language learners")
 - Expanding on `One Tokenizer To Rule Them All: Emergent Language Plasticity via Multilingual Tokenizers (Abagyan)` to create a `Phonolgical Universal Tokenizer`
