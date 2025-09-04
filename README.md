@@ -96,8 +96,4 @@ python -m src.tokenization.test_tokenizer
 ### Train Tokenizer on Aya Collections
 - TODO: Coming Soon!
 ___
-<<<<<<< HEAD
 [Back to Top!](#table-of-contents)
-=======
-[Back to Top!](#table-of-contents)
->>>>>>> 359f35c (add acknowledgements)
